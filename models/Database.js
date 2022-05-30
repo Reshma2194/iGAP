@@ -17,7 +17,7 @@ class Database{
                 if(err)
                     return reject(err);
                 else
-                    return resolve(result);
+                   return resolve(result);
             });
         });        
     }

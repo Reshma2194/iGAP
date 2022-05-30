@@ -1,11 +1,20 @@
 let express = require("express");
-let Admin = require("./models/Admin");
-let app = express();
+const Admin = require("./models/Admin");
+const Course = require("./models/Courses");
+const Coursetopics = require("./models/Coursetopics");
 
+let app = express();
 app.use(express.json());
 
-app.get("/", (req, res)=>
-{
+app.use(function (req, res, next) {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+    res.setHeader('Access-Control-Allow-Credentials', true);
+    next();
+});
+
+app.get("/", (req, res)=>{
     res.send("Welcome to iGAP Education APIs");
 });
 
@@ -15,15 +24,163 @@ app.post("/login", (req, res)=>{
     admin.email = data.email;
     admin.password = data.password;
     admin.login().then(
-        resolve=>{
-            res.send(resolve);
+        result=>{
+            res.send({status:"success", data:result});
         },
-        reject=>{
-            res.send(reject);
+        err=>{
+            res.send({status:"fail", data:err});
         }
-    );
+    )
+});
+
+app.post("/savecourse", (req, res)=>{
+    let data = req.body.data;
+    let course = new Course.Course();
+    course.id = data.id;
+    course.name = data.name;
+    course.imgpath = data.imgpath;
+    course.description = data.description;
+    course.save().then(
+        result=>{
+            res.send({status:"success", data:result});
+        },
+        err=>{
+            res.send({status:"fail", data:err});
+        }
+    )
+});
+
+
+app.post("/deletecourse", (req, res)=>{
+    let data = req.body.data;
+    let course = new Course.Course();
+    course.id = data.id;
+    course.delete().then(
+        result=>{
+            res.send({status:"success", data:result});
+        },
+        err=>{
+            res.send({status:"fail", data:err});
+        }
+    )
+});
+
+app.post("/listcourse", (req, res)=>{
+    let data = req.body.data;
+    let course = new Course.Course();
+    course.list().then(
+        result=>{
+            res.send({status:"success", data:result});
+        },
+        err=>{
+            res.send({status:"fail", data:err});
+        }
+    )
+});
+
+app.post("/getcourse", (req, res)=>{
+    let data = req.body.data;
+    let course = new Course.Course();
+    course.id = data.id;
+    course.list().then(
+        result=>{
+            res.send({status:"success", data:result});
+        },
+        err=>{
+            res.send({status:"fail", data:err});
+        }
+    )
+});
+
+app.post("/savecoursetopics", (req, res)=>{
+    let data = req.body.data;
+    let coursetopics = new Coursetopics.Coursetopics();
+    coursetopics.id = data.id;
+    coursetopics.courseid = data.courseid;
+    coursetopics.description = data.description;
+    coursetopics.topicname = data.topicname;
+    coursetopics.srno = data.srno;
+    coursetopics.save().then(
+        result=>{
+            res.send({status:"success", data:result});
+        },
+        err=>{
+            res.send({status:"fail", data:err});
+        }
+    )
+});
+
+app.post("/getcoursetopics", (req, res)=>{
+    let data = req.body.data;
+    let course = new Coursetopics.Coursetopics();
+    coursetopics.id = data.id;
+    coursetopics.gettopic().then(
+        result=>{
+            res.send({status:"success", data:result});
+        },
+        err=>{
+            res.send({status:"fail", data:err});
+        }
+    )
+});
+
+app.post("/listcoursetopics", (req, res)=>{
+    let data = req.body.data;
+    let coursetopics = new Coursetopics.Coursetopics();
+    coursetopics.courseid = data.courseid;
+    coursetopics.listtopic().then(
+        result=>{
+            res.send({status:"success", data:result});
+        },
+        err=>{
+            res.send({status:"fail", data:err});
+        }
+    )
+});
+
+app.post("/deletecoursetopics", (req, res)=>{
+    let data = req.body.data;
+    let coursetopics = new Coursetopics.Coursetopics();
+    coursetopics.id = data.id;
+    coursetopics.deletetopic().then(
+        result=>{
+            res.send({status:"success", data:result});
+        },
+        err=>{
+            res.send({status:"fail", data:err});
+        }
+    )
+});
+
+app.post("/listsrcoursetopics", (req, res)=>{
+    let data = req.body.data;
+    let coursetopics = new Coursetopics.Coursetopics();
+    coursetopics.courseid = data.courseid;
+    coursetopics.listsrno().then(
+        result=>{
+            res.send({status:"success", data:result});
+        },
+        err=>{
+            res.send({status:"fail", data:err});
+        }
+    )
+});
+app.post("/updatesrcoursetopics", (req, res)=>{
+    let data = req.body.data;
+    let coursetopics = new Coursetopics.Coursetopics();
+    coursetopics.courseid = data.courseid;
+    coursetopics.id = data.id;
+    coursetopics.srno = data.srno;
+    coursetopics.updatesrno().then(
+        result=>{
+            res.send({status:"success", data:result});
+        },
+        err=>{
+            res.send({status:"fail", data:err});
+        }
+    )
 });
 
 app.listen(8081, ()=>{
-    console.log("App running on http://localhost:8081/");
+    console.log("APIs are running at http://localhost:8081");
 });
