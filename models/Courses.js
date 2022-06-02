@@ -1,7 +1,9 @@
 let Database = require("./Database");
+let fs = require("fs");
 class Course{
     id = 0;
     name = "";
+    imagecode = "";
     imgpath = "";
     description = "";
 
@@ -16,6 +18,17 @@ class Course{
     }
 
     save = ()=>{
+
+        if(this.imagecode != "")
+        {
+            let base64image = this.imagecode.replace(/^data:image\/jpeg;base64,/, "");
+            base64image = base64image.replace(/^data:image\/png;base64,/, "");
+            this.imgpath = "courses/" + Math.random().toString(36).substring(2, 7) + ".png";
+            fs.writeFile("public/" + this.imgpath, base64image, 'base64', function (err) {
+                console.log("Error image saving-" + err);
+            });
+        }
+
         if(this.id == 0)
         {
             this.query = "INSERT INTO courses(name, description, imgpath) ";

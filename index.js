@@ -1,10 +1,15 @@
 let express = require("express");
+let bodyparser = require("body-parser");
 const Admin = require("./models/Admin");
 const Course = require("./models/Courses");
 const Coursetopics = require("./models/Coursetopics");
 
 let app = express();
+app.use(bodyparser.json({limit: '50mb'}));
+app.use(bodyparser.urlencoded({limit: '50mb', extended: true}));  
+
 app.use(express.json());
+app.use(express.static("public"));
 
 app.use(function (req, res, next) {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -21,8 +26,8 @@ app.get("/", (req, res)=>{
 app.post("/login", (req, res)=>{
     let data = req.body.data;
     let admin = new Admin.Admin();
-    admin.email = data.email;
-    admin.password = data.password;
+    admin.email = data.email.replace(/'/g, "''");
+    admin.password = data.password.replace(/'/g, "''");
     admin.login().then(
         result=>{
             res.send({status:"success", data:result});
@@ -37,9 +42,9 @@ app.post("/savecourse", (req, res)=>{
     let data = req.body.data;
     let course = new Course.Course();
     course.id = data.id;
-    course.name = data.name;
-    course.imgpath = data.imgpath;
-    course.description = data.description;
+    course.name = data.name.replace(/'/g, "''");
+    course.imagecode = data.imagecode;
+    course.description = data.description.replace(/'/g, "''");
     course.save().then(
         result=>{
             res.send({status:"success", data:result});
@@ -82,7 +87,7 @@ app.post("/getcourse", (req, res)=>{
     let data = req.body.data;
     let course = new Course.Course();
     course.id = data.id;
-    course.list().then(
+    course.get().then(
         result=>{
             res.send({status:"success", data:result});
         },
