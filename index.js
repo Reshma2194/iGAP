@@ -117,7 +117,7 @@ app.post("/savecoursetopics", (req, res)=>{
 
 app.post("/getcoursetopics", (req, res)=>{
     let data = req.body.data;
-    let course = new Coursetopics.Coursetopics();
+    let coursetopics = new Coursetopics.Coursetopics();
     coursetopics.id = data.id;
     coursetopics.gettopic().then(
         result=>{

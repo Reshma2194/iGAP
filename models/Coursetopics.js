@@ -24,8 +24,8 @@ class Coursetopics {
             this.query += "VALUES('" + this.courseid + "','" + this.topicname + "', '" + this.description + "', '" + this.srno + "')";
         }
         else {
-            this.query = "UPDATE coursetopic SET topicname = '" + this.topicname + "', ";
-            this.query += "description = '" + this.descritption + "',  WHERE id = " + this.id;
+            this.query = "UPDATE coursetopics SET topicname = '" + this.topicname + "', ";
+            this.query += "description = '" + this.descritption + "' WHERE id = " + this.id;
 
         }
         return new Promise((resolve, reject) => {
