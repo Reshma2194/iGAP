@@ -31,16 +31,19 @@ class Successstories{
         {
             let base64image = this.imagecode.replace(/^data:image\/jpeg;base64,/, "");
             base64image = base64image.replace(/^data:image\/png;base64,/, "");
-            this.imgpath = "courses/" + Math.random().toString(36).substring(2, 7) + ".png";
+            this.imgpath = "stories/" + Math.random().toString(36).substring(2, 7) + ".png";
             fs.writeFile("public/" + this.imgpath, base64image, 'base64', function (err) {
                 console.log("Error image saving-" + err);
             });
+
+            
         }
 
 
         if (this.id == 0) {
             this.query = "INSERT INTO successstories(name,package,companyname,position,qualification,imgpath,placementmonth) ";
             this.query += "VALUES('" + this.name + "','" + this.package + "', '" + this.companyname + "', '" + this.position + "','"+this.qualification+"','"+this.imgpath+"','"+this.placementmonth+"')";
+            console.log(this.query);
         }
         else {
             this.query = "UPDATE successstories SET name = '" + this.name + "', ";
