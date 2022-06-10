@@ -1,11 +1,15 @@
 let Database = require("./Database");
 let fs = require("fs");
-class Course{
+class Successstories{
     id = 0;
     name = "";
+    package = "";
+    companyname = "";
+    position = "";
+    qualification = "";
     imagecode = "";
     imgpath = "";
-    description = "";
+    placementmonth = "";
 
     db = new Database.Database();
     query = "";
@@ -13,11 +17,15 @@ class Course{
     constructor(){
         this.id = 0;
         this.name = "";
+        this.package = "";
+        this.companyname = "";
+        this.position = "";
+        this.qualification = "";
         this.imgpath = "";
-        this.description = "";
+        this.placementmonth = "";
     }
 
-    save = ()=>{
+    save = () => {
 
         if(this.imagecode != "")
         {
@@ -29,17 +37,36 @@ class Course{
             });
         }
 
-        if(this.id == 0)
-        {
-            this.query = "INSERT INTO courses(name, description, imgpath) ";
-            this.query += "VALUES('" + this.name + "', '" + this.description + "', '" + this.imgpath + "')";
+
+        if (this.id == 0) {
+            this.query = "INSERT INTO successstories(name,package,companyname,position,qualification,imgpath,placementmonth) ";
+            this.query += "VALUES('" + this.name + "','" + this.package + "', '" + this.companyname + "', '" + this.position + "','"+this.qualification+"','"+this.imgpath+"','"+this.placementmonth+"')";
         }
-        else{
-            this.query = "UPDATE courses SET name = '" + this.name + "', ";
+        else {
+            this.query = "UPDATE successstories SET name = '" + this.name + "', ";
+            this.query += "package = '" + this.package + "', ";
+            this.query += "companyname = '" + this.companyname + "', ";
+            this.query += "position = '" + this.position + "', ";
+            this.query += "qualification = '" + this.qualification + "', ";
             this.query += "imgpath = '" + this.imgpath + "', ";
-            this.query += "description = '" + this.description + "' WHERE id = " + this.id;
+            this.query += "placementmonth = '" + this.placementmonth + "' WHERE id = " + this.id;
+
         }
         console.log(this.query);
+        return new Promise((resolve, reject) => {
+            this.db.query(this.query, (err, result) => {
+                if (err) {
+                    return reject(err);
+                }
+                else {
+                    return resolve(result);
+                }
+            })
+        });
+    }
+
+    getstories = ()=>{
+        this.query = "SELECT * FROM successstories WHERE id = " + this.id;
         return new Promise((resolve, reject)=>{
             this.db.query(this.query, (err, result)=>{
                 if(err)
@@ -53,23 +80,8 @@ class Course{
         });
     }
 
-    delete = ()=>{
-        this.query = "DELETE FROM courses WHERE id = " + this.id;
-        return new Promise((resolve, reject)=>{
-            this.db.query(this.query, (err, result)=>{
-                if(err)
-                {
-                    return reject(err);
-                }
-                else{
-                    return resolve(result);
-                }
-            })
-        });
-    }
-    
-    list = ()=>{
-        this.query = "SELECT * FROM courses";
+    liststories = ()=>{
+        this.query = "SELECT * FROM successstories ";
         return new Promise((resolve, reject)=>{
             this.db.query(this.query, (err, result)=>{
                 if(err)
@@ -83,8 +95,8 @@ class Course{
         });
     }
 
-    get = ()=>{
-        this.query = "SELECT * FROM courses WHERE id = " + this.id;
+    deletestories = ()=>{
+        this.query = "DELETE FROM successstories WHERE id = " + this.id;
         return new Promise((resolve, reject)=>{
             this.db.query(this.query, (err, result)=>{
                 if(err)
@@ -97,8 +109,11 @@ class Course{
             })
         });
     }
+
+
+
 }
 
 module.exports = {
-    Course:Course
+    Successstories: Successstories
 }

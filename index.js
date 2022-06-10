@@ -1,8 +1,11 @@
 let express = require("express");
+
 let bodyparser = require("body-parser");
 const Admin = require("./models/Admin");
 const Course = require("./models/Courses");
 const Coursetopics = require("./models/Coursetopics");
+const Successstories = require("./models/Successstories");
+
 
 let app = express();
 app.use(bodyparser.json({limit: '50mb'}));
@@ -10,6 +13,8 @@ app.use(bodyparser.urlencoded({limit: '50mb', extended: true}));
 
 app.use(express.json());
 app.use(express.static("public"));
+
+
 
 app.use(function (req, res, next) {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -185,6 +190,72 @@ app.post("/updatesrcoursetopics", (req, res)=>{
         }
     )
 });
+
+app.post("/savesuccessstories", (req, res)=>{
+    let data = req.body.data;
+    let successstories = new Successstories.Successstories();
+    successstories.id = data.id;
+    successstories.name = data.name;
+    successstories.package = data.package;
+    successstories.companyname = data.companyname;
+    successstories.position = data.position;
+    successstories.qualification = data.qualification;
+    successstories.imagecode = data.imagecode;
+    successstories.placementmonth = data.placementmonth;
+
+    successstories.save().then(
+        result=>{
+            res.send({status:"success", data:result});
+        },
+        err=>{
+            res.send({status:"fail", data:err});
+        }
+    )
+});
+
+app.post("/getstories", (req, res)=>{
+    let data = req.body.data;
+    let successstories = new Successstories.Successstories();
+    successstories.id = data.id;
+    successstories.getstories().then(
+        result=>{
+            res.send({status:"success", data:result});
+        },
+        err=>{
+            res.send({status:"fail", data:err});
+        }
+    )
+});
+
+app.post("/liststories", (req, res)=>{
+    let data = req.body.data;
+    let successstories = new Successstories.Successstories();
+   
+    successstories.liststories().then(
+        result=>{
+            res.send({status:"success", data:result});
+        },
+        err=>{
+            res.send({status:"fail", data:err});
+        }
+    )
+});
+
+app.post("/deletestories", (req, res)=>{
+    let data = req.body.data;
+    let successstories = new Successstories.Successstories();
+    successstories.id = data.id;
+    successstories.deletestories().then(
+        result=>{
+            res.send({status:"success", data:result});
+        },
+        err=>{
+            res.send({status:"fail", data:err});
+        }
+    )
+});
+
+
 
 app.listen(8081, ()=>{
     console.log("APIs are running at http://localhost:8081");
